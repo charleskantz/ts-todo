@@ -11,12 +11,11 @@ interface TodoListItemProps {
 const TodoLabel = styled.label`
   display: inline-block;
   position: relative;
-  margin: auto;
   cursor: pointer;
   font-size: 22px;
   line-height: 24px;
-  height: 24px;
-  width: 24px;
+  height: 28px;
+  width: 28px;
   clear: both;
 `;
 
@@ -25,8 +24,9 @@ const Checkbox = styled.input`
   opacity: 0;
   cursor: pointer;
   z-index: 40;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
+  margin: 0 0 0 0;
 
   &:checked ~ .custom-checkbox {
     background-color: #FFFFFF;
@@ -126,18 +126,32 @@ const CustomCheckbox = styled.span`
 
 const TodoContainer = styled.div`
   width: 100%;
-  padding-left: 2px;
+  padding: 12px 12px;
+  margin: 16px 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background: rgba(255,255,255,.1);
+  height: 36px;
+`;
+
+interface TodoTextProps {
+  readonly todoCompleted: boolean;
+}
+
+// grab completed state from todo prop for text decoration
+const TodoText = styled.div<TodoTextProps>`
+display: inline-block;
+padding: 0 0 0 12px;
+text-decoration: ${props => props.todoCompleted ? "line-through" : "none"};
 `;
 
 export const TodoListItem: React.FC<TodoListItemProps> = ({ todo, toggleTodo, updateTodo }) => {
 
-  const [ isEditing, setIsEditing ] = useState(false);
+  // if new todo is created, start with text input active, otherwise just display text
+  const [ isEditing, setIsEditing ] = useState(!todo.text);
 
-  const TodoText = styled.div`
-    display: inline-block;
-    padding: 0 0 4px 12px;
-    text-decoration: ${todo.completed ? "line-through" : "none"};
-  `;
+
 
   const handleUpdate = (newText: string) => {
     updateTodo(newText, todo.id);
@@ -154,9 +168,9 @@ export const TodoListItem: React.FC<TodoListItemProps> = ({ todo, toggleTodo, up
         />
         <CustomCheckbox className="custom-checkbox"></CustomCheckbox>
       </TodoLabel>
-      {isEditing
+      {isEditing // shows text input for adding new todo or editing existing todo
         ? <EditTodo initial={todo.text} setTodo={handleUpdate} />
-        : <TodoText onClick={() => setIsEditing(true)}>{todo.text}</TodoText>
+        : <TodoText todoCompleted={todo.completed} onClick={() => setIsEditing(true)}>{todo.text}</TodoText>
       }
     </TodoContainer>
   );

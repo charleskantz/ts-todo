@@ -15,7 +15,9 @@ const Container = styled.div`
 `;
 
 const Branding = styled.h1`
-  color: white;
+  padding-top: 2rem;
+  font-family: "Recursive", sans-serif;
+  color: lightgray;
   font-size: 2rem;
 `;
 
@@ -63,7 +65,7 @@ const App: React.FC = () => {
 
   return (
     <Container>
-      <Branding>Hello</Branding>
+      <Branding>geterdun</Branding>
       <TodoList todos={todos} toggleTodo={toggleTodo} updateTodo={updateTodo} />
       <AddTodoForm addTodo={addTodo} />
     </Container>

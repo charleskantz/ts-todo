@@ -7,7 +7,6 @@ import 'reset-css';
 
 // app-wide styling
 const GlobalStyle = createGlobalStyle`
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Recursive:wght@400;600&display=swap');
   body {
     background-color: rgb(33,37,43);
     font-family: 'Open Sans', sans-serif;

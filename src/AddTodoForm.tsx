@@ -1,26 +1,22 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { MouseEvent } from 'react';
+import styled from 'styled-components';
 
 interface AddTodoFormProps {
   addTodo: AddTodo;
 }
 
+const Button = styled.button`
+
+`;
+
 export const AddTodoForm: React.FC<AddTodoFormProps> = ({ addTodo }) => {
 
-  const [ textEntry, setTextEntry ] = useState("");
-
-  const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
+  const newTodo = (evt: MouseEvent<HTMLButtonElement>) => {
     evt.preventDefault();
-    addTodo(textEntry);
-  }
-
-  const handleChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    setTextEntry(evt.target.value);
+    addTodo('');
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="text" value={textEntry} onChange={handleChange} />
-      <button type="submit">Add Todo</button>
-    </form>
+      <Button onClick={newTodo} type="submit">New Todo</Button>
   )
 }
