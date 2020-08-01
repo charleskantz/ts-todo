@@ -1,5 +1,7 @@
 import React from 'react';
 import { TodoListItem } from './TodoListItem';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import './cssTransitions.css';
 
 interface TodoListProps {
   todos: Array<Todo>;
@@ -11,13 +13,19 @@ export const TodoList: React.FC<TodoListProps> = ({ todos, toggleTodo, updateTod
 
   const generateTodos = () => {
     return todos.map((todo: Todo) => (
-      <TodoListItem todo={todo} key={todo.text} toggleTodo={toggleTodo} updateTodo={updateTodo} />
+      <TodoListItem todo={todo} key={todo.id} toggleTodo={toggleTodo} updateTodo={updateTodo} />
       ));
   }
 
   return (
-    <ul>
+    <ReactCSSTransitionGroup
+      transitionName="fade"
+      transitionEnterTimeout={500}
+      transitionLeaveTimeout={500}
+      transitionAppear={true}
+      transitionAppearTimeout={500}
+    >
       {generateTodos()}
-    </ul>
+    </ReactCSSTransitionGroup>
   )
 }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TodoList } from './TodoList';
-import { AddTodoForm } from './AddTodoForm';
+import { AddTodoButton } from './AddTodoButton';
 import styled from 'styled-components';
 import { v4 as uuid } from 'uuid';
 
@@ -67,7 +67,7 @@ const App: React.FC = () => {
     <Container>
       <Branding>geterdun</Branding>
       <TodoList todos={todos} toggleTodo={toggleTodo} updateTodo={updateTodo} />
-      <AddTodoForm addTodo={addTodo} />
+      <AddTodoButton addTodo={addTodo} />
     </Container>
   );
 }
