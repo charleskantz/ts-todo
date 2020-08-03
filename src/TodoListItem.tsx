@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import { EditTodo } from './EditTodo';
+import TodoContext from './todoContext';
 
 interface TodoListItemProps {
   todo: Todo;
-  toggleTodo: ToggleTodo;
-  updateTodo: any;
 }
 
 const TodoLabel = styled.label`
@@ -146,12 +145,12 @@ padding: 0 0 0 12px;
 text-decoration: ${props => props.todoCompleted ? "line-through" : "none"};
 `;
 
-export const TodoListItem: React.FC<TodoListItemProps> = ({ todo, toggleTodo, updateTodo }) => {
+export const TodoListItem: React.FC<TodoListItemProps> = ({ todo }) => {
+
+  const { updateTodo, toggleTodo } = useContext(TodoContext);
 
   // if new todo is created, start with text input active, otherwise just display text
   const [ isEditing, setIsEditing ] = useState(!todo.text);
-
-
 
   const handleUpdate = (newText: string) => {
     updateTodo(newText, todo.id);

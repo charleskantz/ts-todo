@@ -3,6 +3,7 @@ import { TodoList } from './TodoList';
 import { AddTodoButton } from './AddTodoButton';
 import styled from 'styled-components';
 import { v4 as uuid } from 'uuid';
+import TodoContext from './todoContext';
 
 const initialTodos: Array<Todo> = [
   { text: 'test todo', completed: false, id: '1' },
@@ -38,7 +39,7 @@ const App: React.FC = () => {
     setTodos(newTodos);
   }
 
-  const updateTodo = (newText: string, id: string) => {
+  const updateTodo: UpdateTodo = (newText, id) => {
     const updatedTodos = todos.map(todo => {
       if (todo.id === id) {
         return {
@@ -64,11 +65,15 @@ const App: React.FC = () => {
   }
 
   return (
-    <Container>
-      <Branding>geterdun</Branding>
-      <TodoList todos={todos} toggleTodo={toggleTodo} updateTodo={updateTodo} />
-      <AddTodoButton addTodo={addTodo} />
-    </Container>
+    <TodoContext.Provider
+      value={{ todos, toggleTodo, updateTodo, addTodo }}
+    >
+      <Container>
+        <Branding>geterdun</Branding>
+        <TodoList />
+        <AddTodoButton />
+      </Container>
+    </TodoContext.Provider>
   );
 }
 

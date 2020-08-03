@@ -1,15 +1,14 @@
-import React, { MouseEvent } from 'react';
+import React, { MouseEvent, useContext } from 'react';
 import styled from 'styled-components';
-
-interface AddTodoButtonProps {
-  addTodo: AddTodo;
-}
+import TodoContext from './todoContext';
 
 const Button = styled.button`
 
 `;
 
-export const AddTodoButton: React.FC<AddTodoButtonProps> = ({ addTodo }) => {
+export const AddTodoButton: React.FC = () => {
+
+  const { addTodo } = useContext(TodoContext);
 
   const newTodo = (evt: MouseEvent<HTMLButtonElement>) => {
     evt.preventDefault();

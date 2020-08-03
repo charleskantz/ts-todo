@@ -1,19 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { TodoListItem } from './TodoListItem';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import './cssTransitions.css';
+import TodoContext from './todoContext';
 
-interface TodoListProps {
-  todos: Array<Todo>;
-  toggleTodo: ToggleTodo;
-  updateTodo: any;
-}
+export const TodoList: React.FC = () => {
 
-export const TodoList: React.FC<TodoListProps> = ({ todos, toggleTodo, updateTodo }) => {
+  const { todos } = useContext(TodoContext);
 
   const generateTodos = () => {
     return todos.map((todo: Todo) => (
-      <TodoListItem todo={todo} key={todo.id} toggleTodo={toggleTodo} updateTodo={updateTodo} />
+      <TodoListItem todo={todo} key={todo.id} />
       ));
   }
 
