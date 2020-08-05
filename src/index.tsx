@@ -8,7 +8,7 @@ import 'reset-css';
 // app-wide styling
 const GlobalStyle = createGlobalStyle`
   body {
-    background-color: rgb(33,37,43);
+    background-color: rgb(36, 36, 38);
     font-family: 'Open Sans', sans-serif;
     color: white;
   }

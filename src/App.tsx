@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, FormEvent } from 'react';
 import { TodoList } from './TodoList';
-import { AddTodoButton } from './AddTodoButton';
+import { Button } from './Button';
 import styled from 'styled-components';
 import { v4 as uuid } from 'uuid';
 import TodoContext from './todoContext';
@@ -27,7 +27,7 @@ const App: React.FC = () => {
   const [ todos, setTodos ] = useState(initialTodos);
 
   const toggleTodo: ToggleTodo = selectedTodo => {
-    const newTodos = todos.map(todo => {
+    const newTodos = todos.map((todo: Todo) => {
       if (todo === selectedTodo) {
         return {
           ...todo,
@@ -40,7 +40,7 @@ const App: React.FC = () => {
   }
 
   const updateTodo: UpdateTodo = (newText, id) => {
-    const updatedTodos = todos.map(todo => {
+    const updatedTodos = todos.map((todo: Todo) => {
       if (todo.id === id) {
         return {
           ...todo,
@@ -58,10 +58,15 @@ const App: React.FC = () => {
       completed: false,
       id: uuid()
     }
-    setTodos(todos => [
+    setTodos((todos: Array<Todo>) => [
       ...todos,
       addTodo
     ]);
+  }
+
+  const handleNewTodo = (evt: FormEvent<HTMLFormElement | HTMLInputElement>) => {
+    evt.preventDefault();
+    addTodo("");
   }
 
   return (
@@ -71,7 +76,9 @@ const App: React.FC = () => {
       <Container>
         <Branding>geterdun</Branding>
         <TodoList />
-        <AddTodoButton />
+        <form onSubmit={handleNewTodo}>
+          <Button label="+ New Todo" />
+        </form>
       </Container>
     </TodoContext.Provider>
   );

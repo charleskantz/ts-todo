@@ -28,13 +28,13 @@ const Checkbox = styled.input`
   margin: 0 0 0 0;
 
   &:checked ~ .custom-checkbox {
-    background-color: #FFFFFF;
+    background-color: rgb(87, 152, 246);
     border-radius: 5px;
     -webkit-transform: rotate(0deg) scale(1);
     -ms-transform: rotate(0deg) scale(1);
     transform: rotate(0deg) scale(1);
     opacity:1;
-    border: 2px solid #FFFFFF;
+    border: 2px solid rgb(87, 152, 246);
   }
 
   &:checked ~ .custom-checkbox::after {
@@ -46,7 +46,7 @@ const Checkbox = styled.input`
     top: 3px;
     width: 6px;
     height: 12px;
-    border: solid #009BFF;
+    border: solid rgb(33,37,43);
     border-width: 0 2px 2px 0;
     background-color: transparent;
     border-radius: 0;
@@ -94,7 +94,7 @@ const CustomCheckbox = styled.span`
     height: 0px;
     width: 0px;
     border-radius: 5px;
-    border: solid #009BFF;
+    border: solid rgb(128, 128, 130);
     border-width: 0 3px 3px 0;
     -webkit-transform: rotate(0deg) scale(0);
     -ms-transform: rotate(0deg) scale(0);
@@ -125,13 +125,40 @@ const CustomCheckbox = styled.span`
 
 const TodoContainer = styled.div`
   width: 100%;
-  padding: 12px 12px;
   margin: 16px 0;
+`;
+
+
+// parts of styling is dependent on whether that todo is being edited.
+// effect is a focus-like area when a todo is created/being edited
+interface TodoFocusProps {
+  readonly isEditing: boolean;
+}
+
+const TodoFocus = styled.div<TodoFocusProps>`
+  border-radius: 4px;
+  height: ${props => props.isEditing
+    ? "36px"
+    : "inherit" };
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  background: rgba(255,255,255,.1);
-  height: 36px;
+  padding: ${props => props.isEditing
+    ? "16px 16px"
+    : "0 16px" };
+  background: ${props => props.isEditing
+    ? "rgb(46, 47, 50)"
+    : "transparent" };
+  margin: ${props => props.isEditing
+    ? "36px 0"
+    : "0" };
+  -webkit-box-shadow: ${props => props.isEditing
+    ? "0px 0px 5px 2px rgba(0,0,0,0.2) "
+    : "none" };
+  box-shadow: ${props => props.isEditing
+    ? "0px 0px 5px 2px rgba(0,0,0,0.2) "
+    : "none" };
+  transition: all .5s cubic-bezier(0.25, 1, 0.5, 1);
 `;
 
 interface TodoTextProps {
@@ -140,9 +167,10 @@ interface TodoTextProps {
 
 // grab completed state from todo prop for text decoration
 const TodoText = styled.div<TodoTextProps>`
-display: inline-block;
-padding: 0 0 0 12px;
-text-decoration: ${props => props.todoCompleted ? "line-through" : "none"};
+  display: inline-block;
+  padding: 0 0 0 12px;
+  text-decoration: ${props => props.todoCompleted ? "line-through" : "none"};
+  color: ${props => props.todoCompleted ? "rgb(128, 128, 130)" : "white"};
 `;
 
 export const TodoListItem: React.FC<TodoListItemProps> = ({ todo }) => {
@@ -159,18 +187,20 @@ export const TodoListItem: React.FC<TodoListItemProps> = ({ todo }) => {
 
   return (
     <TodoContainer>
-      <TodoLabel htmlFor="todo">
-        <Checkbox
-          type="checkbox"
-          checked={todo.completed}
-          onChange={ () => toggleTodo(todo) }
-        />
-        <CustomCheckbox className="custom-checkbox"></CustomCheckbox>
-      </TodoLabel>
-      {isEditing // shows text input for adding new todo or editing existing todo
-        ? <EditTodo initial={todo.text} setTodo={handleUpdate} />
-        : <TodoText todoCompleted={todo.completed} onClick={() => setIsEditing(true)}>{todo.text}</TodoText>
-      }
+      <TodoFocus isEditing={isEditing}>
+        <TodoLabel htmlFor="todo">
+          <Checkbox
+            type="checkbox"
+            checked={todo.completed}
+            onChange={ () => toggleTodo(todo) }
+          />
+          <CustomCheckbox className="custom-checkbox"></CustomCheckbox>
+        </TodoLabel>
+        {isEditing // shows text input for adding new todo or editing existing todo
+          ? <EditTodo initial={todo.text} setTodo={handleUpdate} />
+          : <TodoText todoCompleted={todo.completed} onClick={() => setIsEditing(true)}>{todo.text}</TodoText>
+        }
+      </TodoFocus>
     </TodoContainer>
   );
 }
