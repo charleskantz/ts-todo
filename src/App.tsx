@@ -6,8 +6,8 @@ import { v4 as uuid } from 'uuid';
 import TodoContext from './todoContext';
 
 const initialTodos: Array<Todo> = [
-  { text: 'test todo', completed: false, id: '1' },
-  { text: 'finish todo list', completed: true, id: '2' }
+  { text: 'test todo', completed: false, id: '1', date: new Date() },
+  { text: 'finish todo list', completed: true, id: '2', date: new Date() }
 ];
 
 const Container = styled.div`
@@ -39,11 +39,12 @@ const App: React.FC = () => {
     setTodos(newTodos);
   }
 
-  const updateTodo: UpdateTodo = (newText, id) => {
+  const updateTodo: UpdateTodo = (newText, date, id) => {
     const updatedTodos = todos.map((todo: Todo) => {
       if (todo.id === id) {
         return {
           ...todo,
+          date,
           text: newText
         }
       }
@@ -56,7 +57,8 @@ const App: React.FC = () => {
     const addTodo: Todo = {
       text: newTodo,
       completed: false,
-      id: uuid()
+      id: uuid(),
+      date: new Date()
     }
     setTodos((todos: Array<Todo>) => [
       ...todos,

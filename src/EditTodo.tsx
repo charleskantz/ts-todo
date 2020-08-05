@@ -1,6 +1,8 @@
-import React, { useState, ChangeEvent, FormEvent  } from 'react';
+import React, { useState, ChangeEvent, FormEvent, FocusEvent  } from 'react';
 import styled from 'styled-components';
 import { Button } from './Button';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 
 /*
   EditTodo: text input for editing todo text inline
@@ -8,7 +10,8 @@ import { Button } from './Button';
 
 interface EditTodoProps {
   initial: string;
-  setTodo: AddTodo;
+  setTodo: SetTodo;
+  date: Date;
 }
 
 const Form = styled.form`
@@ -26,17 +29,39 @@ const Input = styled.input`
   background: transparent;
 `;
 
-export const EditTodo: React.FC<EditTodoProps> = ({ initial = '', setTodo }) => {
+interface TodoData {
+  text: string
+  date: Date;
+}
 
-  const [ todoText, setTodoText ] = useState(initial);
+export const EditTodo: React.FC<EditTodoProps> = ({ initial = '', setTodo, date }) => {
+
+  const [ todoData, setTodoData ] = useState({ text: initial, date });
+
 
   const handleSubmit = (evt: FormEvent<HTMLFormElement | HTMLInputElement>) => {
     evt.preventDefault();
-    setTodo(todoText || "New Todo");
-  }
+    setTodo(todoData.text || "New Todo", todoData.date);
+  };
 
   const handleChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    setTodoText(evt.target.value);
+    const { name, value } = evt.target;
+    setTodoData((todoData: TodoData) => ({
+      ...todoData,
+      [name]: value
+    }));
+  };
+
+  const handleDateChange = (date: Date) => {
+    setTodoData((todoData: TodoData) => ({
+      ...todoData,
+      date
+    }));
+  };
+
+  const handleBlur  = (evt: FocusEvent) => {
+    evt.persist();
+    console.log(evt)
   }
 
   return (
@@ -44,12 +69,18 @@ export const EditTodo: React.FC<EditTodoProps> = ({ initial = '', setTodo }) => 
       <Input
         autoFocus
         type="text"
-        value={todoText}
+        name="text"
+        value={todoData.text}
         onChange={handleChange}
-        onBlur={handleSubmit}
+        onBlur={handleBlur}
         placeholder="New Todo"
       />
       <Button label={initial ? "Update" : "Add"} />
+      <DatePicker
+        allowSameDay={true}
+        onChange={handleDateChange}
+        selected={todoData.date}
+      />
     </Form>
   )
 }

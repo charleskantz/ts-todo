@@ -180,8 +180,8 @@ export const TodoListItem: React.FC<TodoListItemProps> = ({ todo }) => {
   // if new todo is created, start with text input active, otherwise just display text
   const [ isEditing, setIsEditing ] = useState(!todo.text);
 
-  const handleUpdate = (newText: string) => {
-    updateTodo(newText, todo.id);
+  const handleUpdate = (text: string, date: Date) => {
+    updateTodo(text, date, todo.id);
     setIsEditing(false);
   }
 
@@ -197,7 +197,7 @@ export const TodoListItem: React.FC<TodoListItemProps> = ({ todo }) => {
           <CustomCheckbox className="custom-checkbox"></CustomCheckbox>
         </TodoLabel>
         {isEditing // shows text input for adding new todo or editing existing todo
-          ? <EditTodo initial={todo.text} setTodo={handleUpdate} />
+          ? <EditTodo initial={todo.text} setTodo={handleUpdate} date={todo.date} />
           : <TodoText todoCompleted={todo.completed} onClick={() => setIsEditing(true)}>{todo.text}</TodoText>
         }
       </TodoFocus>
