@@ -12,6 +12,9 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Open Sans', sans-serif;
     color: white;
   }
+  #root {
+    z-index: -2;
+  }
 `;
 
 ReactDOM.render(

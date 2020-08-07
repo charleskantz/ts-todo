@@ -1,7 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, ChangeEvent } from 'react';
 import styled from 'styled-components';
 import { EditTodo } from './EditTodo';
 import TodoContext from './todoContext';
+import moment from 'moment';
 
 interface TodoListItemProps {
   todo: Todo;
@@ -16,6 +17,7 @@ const TodoLabel = styled.label`
   height: 28px;
   width: 28px;
   clear: both;
+  z-index: 10;
 `;
 
 const Checkbox = styled.input`
@@ -123,42 +125,70 @@ const CustomCheckbox = styled.span`
 
 `;
 
-const TodoContainer = styled.div`
-  width: 100%;
-  margin: 16px 0;
-`;
-
-
 // parts of styling is dependent on whether that todo is being edited.
 // effect is a focus-like area when a todo is created/being edited
-interface TodoFocusProps {
+interface isEditingProp {
   readonly isEditing: boolean;
 }
 
-const TodoFocus = styled.div<TodoFocusProps>`
+const TodoContainer = styled.div<isEditingProp>`
+  width: 100%;
+  margin: 4px 0;
+  ${props => props.isEditing
+    ? `
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: transparent;
+        z-index: -1;
+      }
+    `
+      : null
+  }
+`;
+
+const TodoFocus = styled.div<isEditingProp>`
   border-radius: 4px;
-  height: ${props => props.isEditing
-    ? "36px"
-    : "inherit" };
+  height: inherit;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding: ${props => props.isEditing
-    ? "16px 16px"
-    : "0 16px" };
-  background: ${props => props.isEditing
-    ? "rgb(46, 47, 50)"
-    : "transparent" };
-  margin: ${props => props.isEditing
-    ? "36px 0"
-    : "0" };
-  -webkit-box-shadow: ${props => props.isEditing
-    ? "0px 0px 5px 2px rgba(0,0,0,0.2) "
-    : "none" };
-  box-shadow: ${props => props.isEditing
-    ? "0px 0px 5px 2px rgba(0,0,0,0.2) "
-    : "none" };
+  padding: 8px 16px;
+  background: transparent;
+  margin: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
   transition: all .5s cubic-bezier(0.25, 1, 0.5, 1);
+  z-index: 10;
+
+  &:hover {
+    background: rgba(87, 152, 246, .1);
+  }
+
+  ${props => props.isEditing ? `
+    height: 36px;
+    padding: 16px 16px;
+    background: rgb(46, 47, 50);
+    margin: 36px 0;
+    -webkit-box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.2);
+    box-shadow: $0px 0px 5px 2px rgba(0,0,0,0.2);
+
+    &:hover {
+      background: rgb(46, 47, 50);
+    }
+  `
+    : null
+  }
+`;
+
+const TodoDetails = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 `;
 
 interface TodoTextProps {
@@ -185,21 +215,39 @@ export const TodoListItem: React.FC<TodoListItemProps> = ({ todo }) => {
     setIsEditing(false);
   }
 
+  const handleClose: HandleClose = (text, date, evt: any) => {
+    if (evt.currentTarget.id === 'test' || evt.currentTarget.id === 'root') {
+      updateTodo(text, date, todo.id);
+      setIsEditing(false);
+    }
+  }
+
+  const handleCompletedTodo = (evt: ChangeEvent) => {
+    evt.stopPropagation();
+    toggleTodo(todo)
+  }
+
   return (
-    <TodoContainer>
-      <TodoFocus isEditing={isEditing}>
+    <TodoContainer isEditing={isEditing} id="test">
+      <TodoFocus isEditing={isEditing} onClick={() => setIsEditing(true)}>
         <TodoLabel htmlFor="todo">
           <Checkbox
             type="checkbox"
             checked={todo.completed}
-            onChange={ () => toggleTodo(todo) }
+            onChange={handleCompletedTodo}
+            onClick={e => e.stopPropagation()}
           />
           <CustomCheckbox className="custom-checkbox"></CustomCheckbox>
         </TodoLabel>
-        {isEditing // shows text input for adding new todo or editing existing todo
-          ? <EditTodo initial={todo.text} setTodo={handleUpdate} date={todo.date} />
-          : <TodoText todoCompleted={todo.completed} onClick={() => setIsEditing(true)}>{todo.text}</TodoText>
-        }
+        <TodoDetails>
+          {isEditing // shows text input for adding new todo or editing existing todo
+            ? <EditTodo initial={todo.text} handleClose={handleClose} setTodo={handleUpdate} date={todo.date} />
+            : <>
+                <TodoText todoCompleted={todo.completed} onClick={() => setIsEditing(true)}>{todo.text}</TodoText>
+                <div>{moment(todo.date).format("MMM Do")}</div>
+              </>
+          }
+        </TodoDetails>
       </TodoFocus>
     </TodoContainer>
   );

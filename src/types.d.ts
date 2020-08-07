@@ -13,4 +13,6 @@ type SetTodo = (text: string, date: Date) => void;
 
 type AddTodo = (newTodo: string) => void;
 
+type HandleClose = <Partial>(text: string, date: Date, evt: MouseEvent | null) => void;
+
 type ReactCSSTransitionGroup = any;
